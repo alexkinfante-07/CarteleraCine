@@ -1,5 +1,5 @@
-
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CarteleraCine.Models;
 
@@ -12,13 +12,12 @@ public class PeliculasController : Controller
         _context = context;
     }
 
-    // GET: PELICULAS
-    public async Task<IActionResult> Index()    
+    public async Task<IActionResult> Index()
     {
-        return View(await _context.Pelicula.ToListAsync());
+        var carteleraCineContext = _context.Pelicula.Include(p => p.Genero);
+        return View(await carteleraCineContext.ToListAsync());
     }
 
-    // GET: PELICULAS/Details/5
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
@@ -27,6 +26,7 @@ public class PeliculasController : Controller
         }
 
         var pelicula = await _context.Pelicula
+            .Include(p => p.Genero)
             .FirstOrDefaultAsync(m => m.Id == id);
         if (pelicula == null)
         {
@@ -36,18 +36,15 @@ public class PeliculasController : Controller
         return View(pelicula);
     }
 
-    // GET: PELICULAS/Create
     public IActionResult Create()
     {
+        ViewData["GeneroId"] = new SelectList(_context.Genero.OrderBy(g => g.Nombre), "Id", "Nombre");
         return View();
     }
 
-    // POST: PELICULAS/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Titulo,Director,DuracionMinutos")] Pelicula pelicula)
+    public async Task<IActionResult> Create([Bind("Id,Titulo,Director,DuracionMinutos,GeneroId")] Pelicula pelicula)
     {
         if (ModelState.IsValid)
         {
@@ -55,10 +52,10 @@ public class PeliculasController : Controller
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        ViewData["GeneroId"] = new SelectList(_context.Genero.OrderBy(g => g.Nombre), "Id", "Nombre", pelicula.GeneroId);
         return View(pelicula);
     }
 
-    // GET: PELICULAS/Edit/5
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
@@ -71,15 +68,13 @@ public class PeliculasController : Controller
         {
             return NotFound();
         }
+        ViewData["GeneroId"] = new SelectList(_context.Genero.OrderBy(g => g.Nombre), "Id", "Nombre", pelicula.GeneroId);
         return View(pelicula);
     }
 
-    // POST: PELICULAS/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,Titulo,Director,DuracionMinutos")] Pelicula pelicula)
+    public async Task<IActionResult> Edit(int? id, [Bind("Id,Titulo,Director,DuracionMinutos,GeneroId")] Pelicula pelicula)
     {
         if (id != pelicula.Id)
         {
@@ -106,10 +101,10 @@ public class PeliculasController : Controller
             }
             return RedirectToAction(nameof(Index));
         }
+        ViewData["GeneroId"] = new SelectList(_context.Genero.OrderBy(g => g.Nombre), "Id", "Nombre", pelicula.GeneroId);
         return View(pelicula);
     }
 
-    // GET: PELICULAS/Delete/5
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -118,6 +113,7 @@ public class PeliculasController : Controller
         }
 
         var pelicula = await _context.Pelicula
+            .Include(p => p.Genero)
             .FirstOrDefaultAsync(m => m.Id == id);
         if (pelicula == null)
         {
@@ -127,8 +123,7 @@ public class PeliculasController : Controller
         return View(pelicula);
     }
 
-    // POST: PELICULAS/Delete/5
-    [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int? id)
     {

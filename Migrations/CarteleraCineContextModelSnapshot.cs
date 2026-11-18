@@ -58,6 +58,9 @@ namespace CarteleraCine.Migrations
                     b.Property<int>("DuracionMinutos")
                         .HasColumnType("int");
 
+                    b.Property<int>("GeneroId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Titulo")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -65,7 +68,25 @@ namespace CarteleraCine.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GeneroId");
+
                     b.ToTable("Pelicula");
+                });
+
+            modelBuilder.Entity("CarteleraCine.Models.Pelicula", b =>
+                {
+                    b.HasOne("CarteleraCine.Models.Genero", "Genero")
+                        .WithMany("Peliculas")
+                        .HasForeignKey("GeneroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Genero");
+                });
+
+            modelBuilder.Entity("CarteleraCine.Models.Genero", b =>
+                {
+                    b.Navigation("Peliculas");
                 });
 #pragma warning restore 612, 618
         }
