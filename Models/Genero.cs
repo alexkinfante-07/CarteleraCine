@@ -14,6 +14,7 @@ namespace CarteleraCine.Models
         [Display(Name = "Descripción")]
         [StringLength(200, ErrorMessage = "La descripción no puede superar los 200 caracteres.")]
         public string? Descripcion { get; set; }
+
+        public ICollection<Pelicula> Peliculas { get; set; } = new List<Pelicula>();
     }
 }
-

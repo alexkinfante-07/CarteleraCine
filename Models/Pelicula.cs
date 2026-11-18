@@ -20,5 +20,12 @@ namespace CarteleraCine.Models
         [Required(ErrorMessage = "La duración es obligatoria.")]
         [Range(1, 600, ErrorMessage = "La duración debe estar entre 1 y 600 minutos.")]
         public int DuracionMinutos { get; set; }
+
+        [Required(ErrorMessage = "Debe seleccionar un género.")]
+        [Display(Name = "Género")]
+        public int GeneroId { get; set; }
+
+        [Display(Name = "Género")]
+        public Genero? Genero { get; set; }
     }
 }
