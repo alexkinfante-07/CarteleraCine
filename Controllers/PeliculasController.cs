@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CarteleraCine.Models;
 
+[Authorize]
 public class PeliculasController : Controller
 {
     private readonly CarteleraCineContext _context;
@@ -36,6 +38,7 @@ public class PeliculasController : Controller
         return View(pelicula);
     }
 
+    [Authorize(Roles = "Curador")]
     public IActionResult Create()
     {
         ViewData["GeneroId"] = new SelectList(_context.Genero.OrderBy(g => g.Nombre), "Id", "Nombre");
@@ -44,6 +47,7 @@ public class PeliculasController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Curador")]
     public async Task<IActionResult> Create([Bind("Id,Titulo,Director,DuracionMinutos,GeneroId")] Pelicula pelicula)
     {
         if (ModelState.IsValid)
@@ -56,6 +60,7 @@ public class PeliculasController : Controller
         return View(pelicula);
     }
 
+    [Authorize(Roles = "Curador")]
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
@@ -74,6 +79,7 @@ public class PeliculasController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Curador")]
     public async Task<IActionResult> Edit(int? id, [Bind("Id,Titulo,Director,DuracionMinutos,GeneroId")] Pelicula pelicula)
     {
         if (id != pelicula.Id)
@@ -105,6 +111,7 @@ public class PeliculasController : Controller
         return View(pelicula);
     }
 
+    [Authorize(Roles = "Curador")]
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -123,8 +130,9 @@ public class PeliculasController : Controller
         return View(pelicula);
     }
 
-        [HttpPost, ActionName("Delete")]
+    [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Curador")]
     public async Task<IActionResult> DeleteConfirmed(int? id)
     {
         var pelicula = await _context.Pelicula.FindAsync(id);

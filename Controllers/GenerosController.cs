@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CarteleraCine.Models;
 
+[Authorize]
 public class GenerosController : Controller
 {
     private readonly CarteleraCineContext _context;
@@ -36,6 +38,7 @@ public class GenerosController : Controller
     }
 
     // GET: Generos/Create
+    [Authorize(Roles = "Curador")]
     public IActionResult Create()
     {
         return View();
@@ -44,6 +47,7 @@ public class GenerosController : Controller
     // POST: Generos/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Curador")]
     public async Task<IActionResult> Create([Bind("Id,Nombre,Descripcion")] Genero genero)
     {
         if (ModelState.IsValid)
@@ -56,6 +60,7 @@ public class GenerosController : Controller
     }
 
     // GET: Generos/Edit/5
+    [Authorize(Roles = "Curador")]
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
@@ -74,6 +79,7 @@ public class GenerosController : Controller
     // POST: Generos/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Curador")]
     public async Task<IActionResult> Edit(int? id, [Bind("Id,Nombre,Descripcion")] Genero genero)
     {
         if (id != genero.Id)
@@ -105,6 +111,7 @@ public class GenerosController : Controller
     }
 
     // GET: Generos/Delete/5
+    [Authorize(Roles = "Curador")]
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -125,6 +132,7 @@ public class GenerosController : Controller
     // POST: Generos/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Curador")]
     public async Task<IActionResult> DeleteConfirmed(int? id)
     {
         var genero = await _context.Genero.FindAsync(id);
@@ -142,4 +150,3 @@ public class GenerosController : Controller
         return _context.Genero.Any(e => e.Id == id);
     }
 }
-
