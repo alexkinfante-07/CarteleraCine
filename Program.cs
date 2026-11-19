@@ -44,4 +44,6 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
+await CarteleraCine.Data.DbInitializer.SeedRolesAndUsersAsync(app.Services);
+
 app.Run();
