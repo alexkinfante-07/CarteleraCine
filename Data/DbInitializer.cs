@@ -21,6 +21,18 @@ namespace CarteleraCine.Data
 
             await CreateUserWithRoleAsync(userManager, "curador@cine.com", "Cine2026*", "Curador");
             await CreateUserWithRoleAsync(userManager, "espectador@cine.com", "Cine2026*", "Espectador");
+
+            var context = scope.ServiceProvider.GetRequiredService<CarteleraCineContext>();
+            if (!context.Genero.Any())
+            {
+                context.Genero.AddRange(
+                    new CarteleraCine.Models.Genero { Nombre = "Acción", Descripcion = "Películas con secuencias de acción, persecuciones y combates." },
+                    new CarteleraCine.Models.Genero { Nombre = "Comedia", Descripcion = "Películas diseñadas para divertir y provocar risas." },
+                    new CarteleraCine.Models.Genero { Nombre = "Drama", Descripcion = "Historias con desarrollo profundo de conflictos humanos y emocionales." },
+                    new CarteleraCine.Models.Genero { Nombre = "Ciencia Ficción", Descripcion = "Historias sobre avances tecnológicos, futuros hipotéticos y el cosmos." }
+                );
+                await context.SaveChangesAsync();
+            }
         }
 
         private static async Task CreateUserWithRoleAsync(

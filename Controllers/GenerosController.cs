@@ -16,7 +16,7 @@ public class GenerosController : Controller
     // GET: Generos
     public async Task<IActionResult> Index()
     {
-        return View(await _context.Genero.ToListAsync());
+        return View(await _context.Genero.Include(g => g.Peliculas).ToListAsync());
     }
 
     // GET: Generos/Details/5
@@ -28,6 +28,7 @@ public class GenerosController : Controller
         }
 
         var genero = await _context.Genero
+            .Include(g => g.Peliculas)
             .FirstOrDefaultAsync(m => m.Id == id);
         if (genero == null)
         {

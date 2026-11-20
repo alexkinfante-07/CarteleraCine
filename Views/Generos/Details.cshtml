@@ -23,6 +23,24 @@
             @Html.DisplayFor(model => model.Descripcion)
         </dd>
     </dl>
+
+    @if (Model.Peliculas != null && Model.Peliculas.Any())
+    {
+        <h5 class="mt-4">Películas registradas en este género (@Model.Peliculas.Count):</h5>
+        <ul class="list-group mb-3">
+            @foreach (var pelicula in Model.Peliculas)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><strong>@pelicula.Titulo</strong> - Director: @pelicula.Director</span>
+                    <span class="badge bg-primary rounded-pill">@pelicula.DuracionMinutos min</span>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p class="text-muted mt-3"><em>No hay películas asociadas a este género aún.</em></p>
+    }
 </div>
 <div>
     @if (User.IsInRole("Curador"))

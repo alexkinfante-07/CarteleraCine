@@ -21,6 +21,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Descripcion)
             </th>
+            <th>
+                Películas
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -33,6 +36,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Descripcion)
+                </td>
+                <td>
+                    <span class="badge bg-secondary">@(item.Peliculas?.Count ?? 0)</span>
                 </td>
                 <td>
                     @if (User.IsInRole("Curador"))
