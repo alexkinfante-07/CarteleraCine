@@ -53,6 +53,12 @@ public class GenerosController : Controller
     {
         if (ModelState.IsValid)
         {
+            if (await _context.Genero.AnyAsync(g => g.Nombre.ToLower() == genero.Nombre.ToLower()))
+            {
+                ModelState.AddModelError("Nombre", "Ya existe un género registrado con este nombre.");
+                return View(genero);
+            }
+
             _context.Add(genero);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
